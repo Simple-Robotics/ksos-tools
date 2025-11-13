@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ksos_tools"
+version = "0.0.2"
+authors = [
+    { name = "Antoine Groudiev", email = "antoine.groudiev@ens.psl.eu" },
+    { name = "Frederike Dümbgen", email = "frederike.duembgen@gmail.com" }
+]
+description = "Codebase for Kernel Sums of Squares (KernelSOS)"
+readme = "README.md"
+license = { file = "LICENSE" }
+urls = { Homepage = "https://github.com/agroudiev/ksos_tools.git" }
+
+[tool.setuptools.packages.find]
+exclude = ["tests*"]

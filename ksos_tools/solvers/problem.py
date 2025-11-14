@@ -254,7 +254,7 @@ class Problem:
         ):
             radius = np.array([radius] * dim)
         assert n_samples >= 1
-        assert sampling in ["linspace", "uniform"]
+        assert sampling in ["linspace", "uniform", "sobol"]
 
         # Generate samples
         if sampling_function is not None:

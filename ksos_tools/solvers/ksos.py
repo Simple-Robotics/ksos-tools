@@ -20,6 +20,7 @@ def solve(
     radius: np.ndarray | float | None = None,
     n_samples: int | None = None,
     samples: np.ndarray | None = None,
+    f_samples: np.ndarray | None = None,
     sampling: str = "uniform",
     sampling_function: Callable[[], np.ndarray] | None = None,
     lambd: float = 1e-3,
@@ -101,7 +102,7 @@ def solve(
         radius = np.array([radius] * dim)
     assert n_samples is None or n_samples >= 1
     assert lambd >= 0
-    assert sigma > 0
+    assert (kernel == "Periodic" and isinstance(sigma, tuple) and sigma[0] > 0 and sigma[1] > 0) or sigma > 0
     assert warm_iterations >= 1
     if samples is not None:
         assert np.ndim(samples) >= 2
@@ -158,7 +159,10 @@ def solve(
         # generate samples and kernel matrix
 
         if samples is not None:
-            problem.register_fixed_samples(samples, f)
+            if f_samples is not None:
+                problem.register_fixed_samples(samples, None, f_samples)
+            else:
+                problem.register_fixed_samples(samples, f, None)
 
             if solver != "naive":
                 success = problem.initialize_kernel(
@@ -279,7 +283,7 @@ def solve(
             radius = radius * d
             if verbose:
                 print(f"Sobolev norm: {norm}  |  Decay: {d}  |  New radius: {radius}")
-        else:
+        elif iteration < warm_iterations - 1:
             assert radius is not None
             assert sigma is not None
             assert isinstance(decay, float)

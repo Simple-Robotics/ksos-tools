@@ -50,3 +50,29 @@ print(f"True solution:  x={-np.pi/2:.4f}, f=-1")
 ```
 
 A large variety of options can be passed to the solver, and can be found in the [`ksos.solve`](ksos_tools/solvers/ksos.py) function documentation. Many examples are showcased in the `tests` directory.
+
+## Citation
+If you use this code in your research, please use the following citation:
+```bibtex
+@software{ksos_tools,
+  author = {Groudiev, Antoine and Dümbgen, Frederike},
+  title = {{ksos-tools}: Implementation of the {Kernel Sum-of-Squares} optimization framework and various related solvers},
+  url = {https://github.com/Simple-Robotics/ksos-tools},
+  version = {0.2.2},
+  date = {2025-11-14},
+}
+```
+
+You can also cite the following related paper:
+
+```bibtex
+@misc{groudiev2025ksos,
+    title={Sampling-Based Global Optimal Control and Estimation via Semidefinite Programming}, 
+    author={Groudiev, Antoine and Schramm, Fabian and Berthier, Éloïse and Carpentier, Justin and Dümbgen, Frederike},
+    year={2025},
+    eprint={2507.17572},
+    archivePrefix={arXiv},
+    primaryClass={cs.RO},
+    url={https://arxiv.org/abs/2507.17572}, 
+}
+```

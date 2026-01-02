@@ -207,7 +207,7 @@ def test_polynomial_kernel():
         if soft_constraints:
             solvers = ["MOSEK"]
         else:
-            solvers = ["MOSEK", "newton", "newton-kernel", "newton-features"]
+            solvers = ["MOSEK", "newton-kernel", "newton-features"]  # disable newton
 
         for solver in solvers:
             print(

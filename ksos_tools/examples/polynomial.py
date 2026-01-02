@@ -1,5 +1,3 @@
-import warnings
-
 import matplotlib.pylab as plt
 import numpy as np
 
@@ -36,8 +34,6 @@ class Polynomial(object):
 
 
 if __name__ == "__main__":
-    import matplotlib.pylab as plt
-
     poly = Polynomial()
     poly.plot()
     plt.show(block=False)

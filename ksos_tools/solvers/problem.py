@@ -66,7 +66,7 @@ def decompose(K, method):
     elif method == "numpy":
         try:
             R = np.linalg.cholesky(K).T
-        except:
+        except np.linalg.LinAlgError:
             raise ValueError("Kernel matrix not positive!")
     elif method == "eigenpy":
         llt = eigenpy.LLT(K)

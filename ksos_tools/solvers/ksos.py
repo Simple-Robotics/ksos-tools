@@ -102,7 +102,12 @@ def solve(
         radius = np.array([radius] * dim)
     assert n_samples is None or n_samples >= 1
     assert lambd >= 0
-    assert (kernel == "Periodic" and isinstance(sigma, tuple) and sigma[0] > 0 and sigma[1] > 0) or sigma > 0
+    assert (
+        kernel == "Periodic"
+        and isinstance(sigma, tuple)
+        and sigma[0] > 0
+        and sigma[1] > 0
+    ) or sigma > 0
     assert warm_iterations >= 1
     if samples is not None:
         assert np.ndim(samples) >= 2

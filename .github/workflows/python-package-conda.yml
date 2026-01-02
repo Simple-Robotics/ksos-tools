@@ -67,6 +67,7 @@ jobs:
       env:
           MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}
       run: |
+        source $CONDA/etc/profile.d/conda.sh
         conda activate ksos_env
         pytest
 
@@ -128,5 +129,6 @@ jobs:
       env:
           MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}
       run: |
+        source $CONDA/etc/profile.d/conda.sh
         conda activate ksos_env
         python -m pytest

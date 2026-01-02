@@ -397,7 +397,7 @@ def get_surrogate(
 
         for i, (fi_interp, fi) in enumerate(zip(values_samples, f_samples_min_c)):
             if abs((fi_interp - fi) / fi) > 1e-2:
-                msg = f"Warning: at sample {i}, surrogate function not passing directly through f: {float(fi_interp):.4f}, {float(fi):.4f}"
+                msg = f"Warning: at sample {i}, surrogate function not passing directly through f: {float(fi_interp.item()):.4f}, {float(fi.item()):.4f}"
                 if errors == "print":
                     print(msg)
                 elif errors == "raise":

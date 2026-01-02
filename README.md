@@ -1,12 +1,12 @@
 ![](overview.png)
-# KernelSOS Toolbox
+# Kernel Sum-of-Squares (KernelSOS) Toolbox
 Implementation of the Kernel Sum-of-Squares optimization framework and various related solvers.
 
 The kernelSOS algorithm solves the following general optimization problem:
 ```math
 \min_{x\in\Omega} f(x)
 ```
-where $f$ is any function that can be sampled over the convex bouded domain $\Omega$. Its generality allows it to be applied to a wide range of problems.
+where $f$ is any function that can be sampled over the convex bounded domain $\Omega$. Its generality allows it to be applied to a wide range of problems.
 
 ## Usage
 The main solver is implemented as `ksos_tools.solvers.ksos.solve`. A minimal example of how to use it is as follows (see `example.py`):

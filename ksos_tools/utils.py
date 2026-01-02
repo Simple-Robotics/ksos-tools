@@ -2,6 +2,7 @@ import cvxpy as cp
 import numpy as np
 from scipy.stats import qmc
 
+
 def get_samples(center, radius, n_samples, sampling):
     dim = len(center)
     if isinstance(radius, float) or isinstance(radius, int):

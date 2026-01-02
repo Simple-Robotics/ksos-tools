@@ -99,7 +99,7 @@ jobs:
           MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}
       run: |
         conda install pytest
-        pytest
+        python -m pytest
 
   macos:
     runs-on: ${{ matrix.platform.runner }}
@@ -129,4 +129,4 @@ jobs:
           MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}
       run: |
         conda install pytest
-        pytest
+        python -m pytest

@@ -76,3 +76,7 @@ You can also cite the following related paper:
     url={https://arxiv.org/abs/2507.17572}, 
 }
 ```
+
+## Acknowledgments
+
+This project received funding from the French government, managed by the National Research Agency (ANR-22-CE33-0008,PEPR O2R,ANR-23-IACL-0008), and by the European Union (GA no.101207106), the ARTIFACT project (GA no.101165695, GA no.101070165). Paris Île-de-France Région supported this work in the framework of DIM AI4IDF.

@@ -42,7 +42,7 @@ def plot_solutions(center, radius, info, x_gt, f):
 )
 @pytest.mark.parametrize("kernel", ("Laplace", "Gauss"))
 def test_ackley(solver, kernel, plot=False):
-    f_here = lambda x: ackley(x)  # type: ignore
+    f_here = lambda x: ackley(x)  # type: ignore # noqa: E731
     dim = 2
     x_gt = np.zeros(dim)
 

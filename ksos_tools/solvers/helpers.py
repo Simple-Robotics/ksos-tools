@@ -1,7 +1,6 @@
 import cvxpy as cp
-import numpy as np
 
-from ksos_tools.utils import duplication_matrix, hvec
+from ksos_tools.utils import hvec
 
 
 def find_feasible_B(alpha, c, problem, soft=False):

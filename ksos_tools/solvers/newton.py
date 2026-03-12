@@ -1,17 +1,13 @@
 import warnings
 
-import eigenpy
 import numpy as np
 import scipy
 import scipy.linalg
+from ksos_tools.solvers.problem import Problem
 
 DEBUG = False
 
 TOL_EIG_MIN = -1e-8  # values below this are considered negative.
-
-
-from ksos_tools.solvers.helpers import find_feasible_B
-from ksos_tools.solvers.problem import Problem
 
 
 def armijo_linesearch(cost_before, alpha, stepsize, delta, grad_H, problem: Problem):
@@ -175,7 +171,7 @@ def damped_newton(problem, iterations=100, verbose=False, return_B=False):
             # solve = lambda x: llt.solve(x)
             a, b = scipy.linalg.cho_factor(H_pp)
             solve = lambda x: scipy.linalg.cho_solve((a, b), x)
-        except:
+        except scipy.linalg.LinAlgError:
             warnings.warn("Hessian is not positive definite?")
             a, b = scipy.linalg.lu_factor(H_pp)
             solve = lambda x: scipy.linalg.lu_solve((a, b), x)
@@ -302,7 +298,7 @@ def damped_newton_advanced(
             solve = lambda x: scipy.linalg.cho_solve((a, b), x)
             # llt = eigenpy.LLT(hess_H)
             # solve = lambda x: llt.solve(x)
-        except:
+        except scipy.linalg.LinAlgError:
             a, b = scipy.linalg.lu_factor(hess_H)
             solve = lambda x: scipy.linalg.lu_solve((a, b), x)
         g1 = solve(grad_H).flatten()

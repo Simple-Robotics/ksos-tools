@@ -43,6 +43,9 @@ def kernel_function(x, y, sigma, kernel):
         return np.exp(-np.linalg.norm(x - y) ** 2 / (2 * sigma**2))
     elif kernel == "Polynomial":
         return (1 + np.inner(x, y)) ** int(sigma)
+    elif kernel == "Periodic":
+        p, l = sigma
+        return np.prod(np.exp(-2 * (np.sin(np.pi * (x - y) / p) ** 2) / l**2))
     else:
         raise ValueError(f"unknown kernel function {kernel}")
 
@@ -63,7 +66,7 @@ def decompose(K, method):
     elif method == "numpy":
         try:
             R = np.linalg.cholesky(K).T
-        except:
+        except np.linalg.LinAlgError:
             raise ValueError("Kernel matrix not positive!")
     elif method == "eigenpy":
         llt = eigenpy.LLT(K)
@@ -254,7 +257,7 @@ class Problem:
         ):
             radius = np.array([radius] * dim)
         assert n_samples >= 1
-        assert sampling in ["linspace", "uniform"]
+        assert sampling in ["linspace", "uniform", "sobol"]
 
         # Generate samples
         if sampling_function is not None:

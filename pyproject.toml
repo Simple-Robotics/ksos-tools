@@ -9,10 +9,10 @@ authors = [
     { name = "Antoine Groudiev", email = "antoine.groudiev@ens.psl.eu" },
     { name = "Frederike Dümbgen", email = "frederike.duembgen@gmail.com" }
 ]
-description = "Codebase for Kernel Sums of Squares (KernelSOS)"
+description = "Implementation of the Kernel Sum-of-Squares optimization framework and various related solvers"
 readme = "README.md"
 license = { file = "LICENSE" }
-urls = { Homepage = "https://github.com/agroudiev/ksos_tools.git" }
+urls = { Homepage = "https://github.com/Simple-Robotics/ksos-tools/" }
 
 [tool.setuptools.packages.find]
 exclude = ["tests*"]

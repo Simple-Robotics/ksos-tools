@@ -100,7 +100,7 @@ def solve_from_samples(
             return None, {"cost": None, "ttot": ttot}
         else:
             ttot = time.time() - t1
-            if not "optimal" in prob.status:
+            if "optimal" not in prob.status:
                 print("No solution found:", prob.status)
                 return None, {"cost": None, "ttot": ttot}
 

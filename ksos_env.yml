@@ -12,6 +12,7 @@ dependencies:
   - matplotlib
   - numpy
   - scipy
+  - pytest
   - pip:
     - mosek
     - -e .

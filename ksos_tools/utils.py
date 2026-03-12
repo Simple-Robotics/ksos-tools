@@ -1,5 +1,6 @@
 import cvxpy as cp
 import numpy as np
+from scipy.stats import qmc
 
 
 def get_samples(center, radius, n_samples, sampling):
@@ -27,6 +28,14 @@ def get_samples(center, radius, n_samples, sampling):
                 for i in range(dim)
             ]
         ).T
+    elif sampling == "sobol":
+        sampler = qmc.Sobol(d=dim, scramble=True)
+        samples_unit = sampler.random(n_samples)
+        samples = qmc.scale(
+            samples_unit,
+            l_bounds=center - radius,
+            u_bounds=center + radius,
+        )
     else:
         raise ValueError(f"Unknown sampling function: {sampling}")
     return samples

@@ -1,13 +1,10 @@
 name: Python Package using Conda
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build-linux:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 5
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.12
@@ -34,3 +31,104 @@ jobs:
       run: |
         conda install pytest
         pytest
+
+  linux:
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      matrix:
+        platform:
+          - runner: ubuntu-22.04
+            target: x86_64
+          - runner: ubuntu-22.04
+            target: x86
+          - runner: ubuntu-22.04
+            target: aarch64
+          - runner: ubuntu-22.04
+            target: armv7
+          - runner: ubuntu-22.04
+            target: s390x
+          - runner: ubuntu-22.04
+            target: ppc64le
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
+      run: |
+        conda env create --file ksos_env.yml --name ksos_env
+    - name: Test with pytest
+      env:
+          MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}
+      run: |
+        source $CONDA/etc/profile.d/conda.sh
+        conda activate ksos_env
+        pytest
+
+  windows:
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      matrix:
+        platform:
+          - runner: windows-latest
+            target: x64
+          - runner: windows-latest
+            target: x86
+      
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+        architecture: ${{ matrix.platform.target }}
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        python-version: '3.12'
+    - name: Install dependencies
+      run: |
+        conda env create --file ksos_env.yml --name ksos_env
+    - name: Test with pytest
+      env:
+          MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}
+      run: |
+        conda activate ksos_env
+        python -m pytest
+
+  macos:
+    runs-on: ${{ matrix.platform.runner }}
+    strategy:
+      matrix:
+        platform:
+          - runner: macos-14
+            target: x86_64
+          - runner: macos-14
+            target: aarch64
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        python-version: '3.12'
+    - name: Install dependencies
+      run: |
+        conda env create --file ksos_env.yml --name ksos_env
+    - name: Test with pytest
+      env:
+          MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}
+      run: |
+        source $CONDA/etc/profile.d/conda.sh
+        conda activate ksos_env
+        python -m pytest

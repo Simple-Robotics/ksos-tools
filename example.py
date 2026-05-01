@@ -11,7 +11,7 @@ n_samples = 10  # how many samples to use
 # solver), newton-features or newton-kernel (more advanced solvers using
 # feature or kernel matrices, respectively; adding e.g. a linesearch option
 # and more advanced diagnostics to the original solver.
-solver = "newton"
+solver = "newton-rs"
 
 # Which kernel to use: use Gauss for smooth, Laplace for less smooth,
 # or provide a kernel of your choice.
@@ -31,5 +31,5 @@ solution, info = ksos.solve(
     solver=solver,
     sigma=sigma,
 )
-print(f"Found solution: x={solution[0]:.4f}, f={info['cost']:.4f}")
+print(f"Found solution: x={solution[0].reshape(-1).item():.4f}, f={info['cost']:.4f}")
 print(f"True solution:  x={-np.pi/2:.4f}, f=-1")

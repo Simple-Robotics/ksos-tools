@@ -172,7 +172,7 @@ def solve(
 
             if solver == "newton-rs":
                 import newton_sos
-                rs_problem = newton_sos.Problem(lambd, t, problem.samples.astype(np.float64), problem.f_samples.astype(np.float64).reshape(-1, 1))
+                rs_problem = newton_sos.Problem(lambd, t, problem.samples.astype(np.float64), problem.f_samples.astype(np.float64))
                 # TODO: catch errors if any
                 rs_problem.initialize_native_kernel(kernel, sigma)
             elif solver != "naive":
@@ -194,7 +194,7 @@ def solve(
                     break
                 elif solver == "newton-rs":
                     import newton_sos
-                    rs_problem = newton_sos.Problem(lambd, t, problem.samples.astype(np.float64), problem.f_samples.astype(np.float64).reshape(-1, 1)) # TODO: avoid reshaping by changing the Rust code
+                    rs_problem = newton_sos.Problem(lambd, t, problem.samples.astype(np.float64), problem.f_samples.astype(np.float64))
                     rs_problem.initialize_native_kernel(kernel, sigma) # TODO: catch errors if any
                     break
                 else:

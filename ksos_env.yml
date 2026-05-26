@@ -16,5 +16,6 @@ dependencies:
   - pytest
   - pip:
     - mosek
+    - maturin
     - newton_sos
     - -e .

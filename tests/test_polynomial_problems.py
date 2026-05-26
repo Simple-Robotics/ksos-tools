@@ -86,7 +86,7 @@ def test_newton_vs_mosek():
 
     z_dict = {}
     info_dict = {}
-    for solver in ["MOSEK", "newton", "newton-kernel", "newton-features"]:
+    for solver in ["MOSEK", "newton", "newton-rs", "newton-kernel", "newton-features"]:
         print(f"\n\nsolving with {solver}")
         t1 = time.time()
         z_solver, info_solver = ksos.solve(
@@ -115,9 +115,9 @@ def test_newton_vs_mosek():
         # assert alpha is feasible
         assert abs(np.sum(info_solver["alpha"]) - 1) <= 1e-10
 
-    for solver in ["newton", "newton-kernel", "newton-features"]:
+    for solver in ["newton", "newton-rs", "newton-kernel", "newton-features"]:
         # make sure both find the same solution
-        np.testing.assert_allclose(z_dict["MOSEK"], z_dict[solver], rtol=1e-2)
+        np.testing.assert_allclose(z_dict["MOSEK"], z_dict[solver].flatten(), rtol=1e-2)
         # make sure both find the same cost
         np.testing.assert_allclose(
             info_dict["MOSEK"]["cost"], info_dict[solver]["cost"], rtol=1e-2
@@ -209,6 +209,8 @@ def test_polynomial_kernel():
         else:
             # TODO: newton-features and newton-kernel not working. 
             # Should investigate why.
+            # newton-rs is intentionally left out cause it does not
+            # support polynomial kernels yet.
             solvers = ["MOSEK", "newton"]
 
         for solver in solvers:

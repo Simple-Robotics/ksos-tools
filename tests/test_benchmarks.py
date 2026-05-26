@@ -38,7 +38,7 @@ def plot_solutions(center, radius, info, x_gt, f):
 
 
 @pytest.mark.parametrize(
-    "solver", ("MOSEK", "newton", "newton-features", "newton-kernel")
+    "solver", ("MOSEK", "newton", "newton-rs", "newton-features", "newton-kernel")
 )
 @pytest.mark.parametrize("kernel", ("Laplace", "Gauss"))
 def test_ackley(solver, kernel, plot=False):
@@ -72,7 +72,7 @@ def test_ackley(solver, kernel, plot=False):
     if plot:
         plot_solutions(center, radius, info, x_gt, f_here)
 
-    np.testing.assert_allclose(x_hat, x_gt, atol=0.5)
+    np.testing.assert_allclose(x_hat.flatten(), x_gt, atol=0.5)
     return
 
 
@@ -125,12 +125,12 @@ def notest_schwefel(solver, kernel, plot=False):
     if plot:
         plot_solutions(center, radius, info, x_gt, f_here)
 
-    np.testing.assert_allclose(x_hat, x_gt, rtol=1e-1)
+    np.testing.assert_allclose(x_hat.flatten(), x_gt, rtol=1e-1)
     return
 
 
 @pytest.mark.parametrize(
-    "solver", ("MOSEK", "newton", "newton-features", "newton-kernel")
+    "solver", ("MOSEK", "newton", "newton-rs", "newton-features", "newton-kernel")
 )
 @pytest.mark.parametrize("kernel", ("Laplace", "Gauss"))
 def test_rosenbrock(solver, kernel, plot=False):
@@ -167,7 +167,7 @@ def test_rosenbrock(solver, kernel, plot=False):
     if plot:
         plot_solutions(center, radius, info, x_gt, f_here)
 
-    np.testing.assert_allclose(x_hat, x_gt, atol=0.5)
+    np.testing.assert_allclose(x_hat.flatten(), x_gt, atol=0.5)
     return
 
 
@@ -179,7 +179,8 @@ if __name__ == "__main__":
     # test_schwefel(solver="newton-new", kernel="Gauss", plot=True)
     plot = False
     for solver, kernel in itertools.product(
-        ["MOSEK", "newton", "newton-kernel", "newton-features"], ["Gauss", "Laplace"]
+        ["MOSEK", "newton", "newton-rs", "newton-kernel", "newton-features"], 
+        ["Gauss", "Laplace"]
     ):
         print(f"========== testing {solver} {kernel} =============")
         print(f"----------         Ackley            -------------")

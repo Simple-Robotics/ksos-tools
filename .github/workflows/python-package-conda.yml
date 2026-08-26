@@ -96,8 +96,6 @@ jobs:
       run: |
         conda env create --file ksos_env_windows.yml --name ksos_env
         conda activate ksos_env
-        python -m pip install --upgrade pip setuptools maturin
-        python -m pip install newton_sos
     - name: Test with pytest
       env:
           MOSEKLM_LICENSE_FILE: ${{ secrets.MOSEK_LICENSE }}

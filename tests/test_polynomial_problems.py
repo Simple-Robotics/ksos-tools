@@ -5,6 +5,8 @@ import matplotlib
 import matplotlib.pylab as plt
 import numpy as np
 
+from tests.test_benchmarks import SOLVERS
+
 # Set matplotlib backend based on environment to avoid display issues
 if os.environ.get("DISPLAY", "") == "":
     # Headless environment (e.g., CI)
@@ -86,7 +88,7 @@ def test_newton_vs_mosek():
 
     z_dict = {}
     info_dict = {}
-    for solver in ["MOSEK", "newton", "newton-rs", "newton-kernel", "newton-features"]:
+    for solver in SOLVERS:
         print(f"\n\nsolving with {solver}")
         t1 = time.time()
         z_solver, info_solver = ksos.solve(
@@ -115,7 +117,10 @@ def test_newton_vs_mosek():
         # assert alpha is feasible
         assert abs(np.sum(info_solver["alpha"]) - 1) <= 1e-10
 
-    for solver in ["newton", "newton-rs", "newton-kernel", "newton-features"]:
+    for solver in SOLVERS:
+        # compare to all solvers but MOSEK
+        if solver == "MOSEK":
+            continue
         # make sure both find the same solution
         np.testing.assert_allclose(z_dict["MOSEK"], z_dict[solver].flatten(), rtol=1e-2)
         # make sure both find the same cost

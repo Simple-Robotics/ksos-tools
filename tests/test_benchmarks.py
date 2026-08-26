@@ -1,9 +1,11 @@
+import warnings
 import matplotlib
 import matplotlib.colors
 import matplotlib.pylab as plt
 import numpy as np
 import pytest
 import os
+import sys
 
 from ksos_tools.examples.benchmarks import ackley, rosenbrock, schwefel
 from ksos_tools.solvers import ksos
@@ -20,6 +22,14 @@ DEFAULT_PARAMS = dict(
     sampling="linspace", return_all=False, return_B=False, verbose=False
 )
 
+if "newton_sos" in sys.modules:
+    SOLVERS = ("MOSEK", "newton", "newton-rs", "newton-features", "newton-kernel")
+else:
+    SOLVERS = ("MOSEK", "newton", "newton-features", "newton-kernel")
+    warnings.warn(
+        "newton-rs solver is not available because newton_sos module is not installed. "
+        "Please install newton_sos to use this solver."
+    )
 
 def plot_solutions(center, radius, info, x_gt, f):
     # plot sample distributions vs. original cost
@@ -38,7 +48,7 @@ def plot_solutions(center, radius, info, x_gt, f):
 
 
 @pytest.mark.parametrize(
-    "solver", ("MOSEK", "newton", "newton-rs", "newton-features", "newton-kernel")
+    "solver", SOLVERS
 )
 @pytest.mark.parametrize("kernel", ("Laplace", "Gauss"))
 def test_ackley(solver, kernel, plot=False):
@@ -130,7 +140,7 @@ def notest_schwefel(solver, kernel, plot=False):
 
 
 @pytest.mark.parametrize(
-    "solver", ("MOSEK", "newton", "newton-rs", "newton-features", "newton-kernel")
+    "solver", SOLVERS
 )
 @pytest.mark.parametrize("kernel", ("Laplace", "Gauss"))
 def test_rosenbrock(solver, kernel, plot=False):
@@ -179,7 +189,7 @@ if __name__ == "__main__":
     # test_schwefel(solver="newton-new", kernel="Gauss", plot=True)
     plot = False
     for solver, kernel in itertools.product(
-        ["MOSEK", "newton", "newton-rs", "newton-kernel", "newton-features"], 
+        SOLVERS,
         ["Gauss", "Laplace"]
     ):
         print(f"========== testing {solver} {kernel} =============")

@@ -172,7 +172,13 @@ def solve(
 
             if solver == "newton-rs":
                 import newton_sos
-                rs_problem = newton_sos.Problem(lambd, t, problem.samples.astype(np.float64), problem.f_samples.astype(np.float64))
+
+                rs_problem = newton_sos.Problem(
+                    lambd,
+                    t,
+                    problem.samples.astype(np.float64),
+                    problem.f_samples.astype(np.float64),
+                )
                 # TODO: catch errors if any
                 rs_problem.initialize_native_kernel(kernel, sigma)
             elif solver != "naive":
@@ -194,8 +200,16 @@ def solve(
                     break
                 elif solver == "newton-rs":
                     import newton_sos
-                    rs_problem = newton_sos.Problem(lambd, t, problem.samples.astype(np.float64), problem.f_samples.astype(np.float64))
-                    rs_problem.initialize_native_kernel(kernel, sigma) # TODO: catch errors if any
+
+                    rs_problem = newton_sos.Problem(
+                        lambd,
+                        t,
+                        problem.samples.astype(np.float64),
+                        problem.f_samples.astype(np.float64),
+                    )
+                    rs_problem.initialize_native_kernel(
+                        kernel, sigma
+                    )  # TODO: catch errors if any
                     break
                 else:
                     success = problem.initialize_kernel(
@@ -235,7 +249,12 @@ def solve(
                 return_B=return_B,
             )
         elif solver == "newton-rs":
-            solve_result = newton_sos.solve(rs_problem, max_iter=max_iters_newton, verbose=verbose, method="partial_piv_lu")
+            solve_result = newton_sos.solve(
+                rs_problem,
+                max_iter=max_iters_newton,
+                verbose=verbose,
+                method="partial_piv_lu",
+            )
             z = solve_result.z_hat
             # TODO: lazy evaluation of phi and B
             rs_problem.compute_phi()

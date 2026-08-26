@@ -212,7 +212,7 @@ def test_polynomial_kernel():
         if soft_constraints:
             solvers = ["MOSEK"]
         else:
-            # TODO: newton-features and newton-kernel not working. 
+            # TODO: newton-features and newton-kernel not working.
             # Should investigate why.
             # newton-rs is intentionally left out cause it does not
             # support polynomial kernels yet.

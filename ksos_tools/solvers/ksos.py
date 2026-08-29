@@ -173,14 +173,22 @@ def solve(
             if solver == "newton-rs":
                 import newton_sos
 
-                rs_problem = newton_sos.Problem(
-                    lambd,
-                    t,
-                    problem.samples.astype(np.float64),
-                    problem.f_samples.astype(np.float64),
-                )
-                # TODO: catch errors if any
-                rs_problem.initialize_native_kernel(kernel, sigma)
+                try:
+                    rs_problem = newton_sos.Problem(
+                        lambd,
+                        t,
+                        problem.samples.astype(np.float64),
+                        problem.f_samples.astype(np.float64),
+                    )
+                    rs_problem.initialize_native_kernel(kernel, sigma)
+                except Exception as exc:
+                    warnings.warn(
+                        f"Warning: Error encountered in newton-rs: {exc}"
+                    )
+                    info["cost"] = None
+                    info["success"] = False
+                    info["status"] = f"Error in newton-rs: {exc}"
+                    return None, info
             elif solver != "naive":
                 success = problem.initialize_kernel(
                     sigma, kernel, verbose=verbose, llt_method=llt_method
@@ -201,15 +209,25 @@ def solve(
                 elif solver == "newton-rs":
                     import newton_sos
 
-                    rs_problem = newton_sos.Problem(
-                        lambd,
-                        t,
-                        problem.samples.astype(np.float64),
-                        problem.f_samples.astype(np.float64),
-                    )
-                    rs_problem.initialize_native_kernel(
-                        kernel, sigma
-                    )  # TODO: catch errors if any
+                    try:
+                        rs_problem = newton_sos.Problem(
+                            lambd,
+                            t,
+                            problem.samples.astype(np.float64),
+                            problem.f_samples.astype(np.float64),
+                        )
+                        rs_problem.initialize_native_kernel(kernel, sigma)
+                    except Exception as exc:
+                        warnings.warn(
+                            f"Warning: Error encountered in newton-rs: {exc}"
+                        )
+                        fail_count += 1
+                        if fail_count >= MAX_FAIL_COUNT or sampling == "linspace":
+                            info["cost"] = None
+                            info["success"] = False
+                            info["status"] = f"Error in newton-rs: {exc}"
+                            return None, info
+                        continue
                     break
                 else:
                     success = problem.initialize_kernel(
@@ -249,23 +267,32 @@ def solve(
                 return_B=return_B,
             )
         elif solver == "newton-rs":
-            solve_result = newton_sos.solve(
-                rs_problem,
-                max_iter=max_iters_newton,
-                verbose=verbose,
-                method="partial_piv_lu",
-            )
-            z = solve_result.z_hat
-            # TODO: lazy evaluation of phi and B
-            rs_problem.compute_phi()
-            info_here = {
-                "cost": solve_result.cost,
-                "alpha": solve_result.alpha,
-                "status": solve_result.status,
-                "success": solve_result.converged,
-                "B": solve_result.get_B(rs_problem),
-                # "X": X,
-            }
+            try:
+                solve_result = newton_sos.solve(
+                    rs_problem,
+                    max_iter=max_iters_newton,
+                    verbose=verbose,
+                    method="partial_piv_lu",
+                )
+                z = solve_result.z_hat
+                # TODO: lazy evaluation of phi and B
+                rs_problem.compute_phi()
+                info_here = {
+                    "cost": solve_result.cost,
+                    "alpha": solve_result.alpha,
+                    "status": solve_result.status,
+                    "success": solve_result.converged,
+                    "B": solve_result.get_B(rs_problem),
+                    # "X": X,
+                }
+            except Exception as exc:  # pragma: no cover - depends on native solver
+                warnings.warn(
+                    f"Warning: newton-rs failed due to an ill-posed kernel: {exc}"
+                )
+                info["cost"] = None
+                info["success"] = False
+                info["status"] = "Kernel matrix not PSD"
+                return None, info
         elif solver == "newton-features":
             problem.use_K = False
             z, info_here = newton.damped_newton_advanced(

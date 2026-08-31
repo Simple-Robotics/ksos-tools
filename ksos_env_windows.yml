@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python=3.12
   - pip
+  - setuptools
   - pytest
 
   - cvxpy
@@ -15,5 +16,4 @@ dependencies:
   - pytest
   - pip:
     - mosek
-    - newton_sos
     - -e .

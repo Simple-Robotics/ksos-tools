@@ -1,9 +1,11 @@
+import warnings
 import matplotlib
 import matplotlib.colors
 import matplotlib.pylab as plt
 import numpy as np
 import pytest
 import os
+import importlib.util
 
 from ksos_tools.examples.benchmarks import ackley, rosenbrock, schwefel
 from ksos_tools.solvers import ksos
@@ -19,6 +21,15 @@ else:
 DEFAULT_PARAMS = dict(
     sampling="linspace", return_all=False, return_B=False, verbose=False
 )
+
+if importlib.util.find_spec("newton_sos") is not None:
+    SOLVERS = ("MOSEK", "newton", "newton-rs", "newton-features", "newton-kernel")
+else:
+    SOLVERS = ("MOSEK", "newton", "newton-features", "newton-kernel")
+    warnings.warn(
+        "newton-rs solver is not available because newton_sos module is not installed. "
+        "Please install newton_sos to use this solver."
+    )
 
 
 def plot_solutions(center, radius, info, x_gt, f):
@@ -37,9 +48,7 @@ def plot_solutions(center, radius, info, x_gt, f):
     plt.show(block=False)
 
 
-@pytest.mark.parametrize(
-    "solver", ("MOSEK", "newton", "newton-features", "newton-kernel")
-)
+@pytest.mark.parametrize("solver", SOLVERS)
 @pytest.mark.parametrize("kernel", ("Laplace", "Gauss"))
 def test_ackley(solver, kernel, plot=False):
     f_here = lambda x: ackley(x)  # type: ignore # noqa: E731
@@ -72,7 +81,7 @@ def test_ackley(solver, kernel, plot=False):
     if plot:
         plot_solutions(center, radius, info, x_gt, f_here)
 
-    np.testing.assert_allclose(x_hat, x_gt, atol=0.5)
+    np.testing.assert_allclose(x_hat.flatten(), x_gt, atol=0.5)
     return
 
 
@@ -125,13 +134,11 @@ def notest_schwefel(solver, kernel, plot=False):
     if plot:
         plot_solutions(center, radius, info, x_gt, f_here)
 
-    np.testing.assert_allclose(x_hat, x_gt, rtol=1e-1)
+    np.testing.assert_allclose(x_hat.flatten(), x_gt, rtol=1e-1)
     return
 
 
-@pytest.mark.parametrize(
-    "solver", ("MOSEK", "newton", "newton-features", "newton-kernel")
-)
+@pytest.mark.parametrize("solver", SOLVERS)
 @pytest.mark.parametrize("kernel", ("Laplace", "Gauss"))
 def test_rosenbrock(solver, kernel, plot=False):
     a = 1.0
@@ -167,7 +174,7 @@ def test_rosenbrock(solver, kernel, plot=False):
     if plot:
         plot_solutions(center, radius, info, x_gt, f_here)
 
-    np.testing.assert_allclose(x_hat, x_gt, atol=0.5)
+    np.testing.assert_allclose(x_hat.flatten(), x_gt, atol=0.5)
     return
 
 
@@ -178,9 +185,7 @@ if __name__ == "__main__":
     # test_rosenbrock(solver="newton-new", kernel="Gauss", plot=True)
     # test_schwefel(solver="newton-new", kernel="Gauss", plot=True)
     plot = False
-    for solver, kernel in itertools.product(
-        ["MOSEK", "newton", "newton-kernel", "newton-features"], ["Gauss", "Laplace"]
-    ):
+    for solver, kernel in itertools.product(SOLVERS, ["Gauss", "Laplace"]):
         print(f"========== testing {solver} {kernel} =============")
         print(f"----------         Ackley            -------------")
         test_ackley(solver=solver, kernel=kernel, plot=plot)

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ksos_tools"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
     { name = "Antoine Groudiev", email = "antoine.groudiev@ens.psl.eu" },
     { name = "Frederike Dümbgen", email = "frederike.duembgen@gmail.com" }

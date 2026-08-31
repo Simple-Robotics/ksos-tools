@@ -10,6 +10,7 @@ This file is used to track changes made to the project over time.
 - Support for Sobol sequences in polynomial problem sampling
 - Support for periodic kernel
 - Support for [`newton-sos`](https://github.com/agroudiev/newton-sos) Rust-based solver
+- Add Linux installation instructions
 
 ## [0.0.2] - 2025-11-14
 ### Additions
